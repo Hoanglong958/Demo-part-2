@@ -9,6 +9,6 @@ Debug.Log("Hello World!");
 }
 void Update()
 {
-Debug.Log("Update called! " + Time.frameCount);
+    Debug.Log("Update called! " + Time.frameCount);
 }
 }

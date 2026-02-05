@@ -2,19 +2,21 @@ using UnityEngine;
 
 public class Dan : MonoBehaviour
 {
-    public GameObject bulletPrefabs;
-    public float shootingInterval;
-    
-    // 1. Thêm biến để điều chỉnh khoảng cách vị trí bắn
-    public Vector3 bulletOffset; 
-    
+    [Header("Bullet Settings")]
+    public GameObject bulletPrefabs;   // Prefab đạn
+    public float shootingInterval = 0.2f; // Thời gian giữa 2 lần bắn
+
+    [Header("Shoot Position")]
+    public Vector3 bulletOffset = new Vector3(0, 1f, 0); // Vị trí bắn
+
     private float lastBulletTime;
 
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        // Giữ chuột trái để bắn
+        if (Input.GetMouseButtonDown(0))
         {
-            if (Time.time - lastBulletTime > shootingInterval)
+            if (Time.time - lastBulletTime >= shootingInterval)
             {
                 ShootBullet();
                 lastBulletTime = Time.time;
@@ -24,7 +26,23 @@ public class Dan : MonoBehaviour
 
     private void ShootBullet()
     {
-        // 2. Cộng thêm bulletOffset vào vị trí hiện tại (transform.position)
-        Instantiate(bulletPrefabs, transform.position + bulletOffset, transform.rotation);
+        // Kiểm tra có gán prefab chưa
+        if (bulletPrefabs == null)
+        {
+            Debug.LogError("Bullet Prefab is NULL! Chưa gán Bullet vào Dan.cs");
+            return;
+        }
+
+        // Tính vị trí bắn
+        Vector3 spawnPos = transform.position + bulletOffset;
+
+        // Tạo đạn
+        GameObject bullet = Instantiate(
+            bulletPrefabs,
+            spawnPos,
+            Quaternion.identity   // Không xoay → bay thẳng lên
+        );
+
+        Debug.Log("Shoot bullet!");
     }
 }
